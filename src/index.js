@@ -1,19 +1,43 @@
-import { init, GameLoop, Sprite, SpriteSheet, keyPressed, initKeys, bindKeys } from 'kontra';
+import { init, GameLoop, Sprite, SpriteSheet, keyPressed, initKeys, Text } from 'kontra';
 
 let { canvas } = init();
 initKeys();
+
+// constant ---------------------------------------------------------
+const PLAYER_HEIGHT = 97;
+const PLAYER_WIDTH = 72;
+const LOAD_PADDING = 3;
+
+const STAGE_WIDTH = canvas.width;
+const STAGE_HEIGHT = canvas.height;
+
+const Y_LOAD_WIDTH = PLAYER_HEIGHT + LOAD_PADDING;
+const X_LOAD_WIDTH = PLAYER_WIDTH + LOAD_PADDING;
+
+const MOVE_SPEED = 2;
+
+// ------------------------------------------------------------------
 
 const startTime = new Date();
 
 let image = new Image();
 image.src = 'assets/imgs/character_walk_sheet.png';
 
-image.onload = function() {
+const rand = (max, min) => {
+    return Math.floor( Math.random() * (max + 1 - min) ) + min ;
+}
 
+const getTime = (time) =>
+    ('' + ((time | 0) / 1000)).replace('.', ':');
+
+
+let creating = false;
+
+image.onload = function() {
     let spriteSheet = SpriteSheet({
         image: image,
-        frameWidth: 72,
-        frameHeight: 97,
+        frameWidth: PLAYER_WIDTH,
+        frameHeight: PLAYER_HEIGHT,
 
         // this will also call createAnimations()
         animations: {
@@ -48,43 +72,64 @@ image.onload = function() {
     });
 
     let player = Sprite({
-        x: 200,
-        y: 400,
+        x: 100,
+        y: 150,
 
         scaleX: 0.5,
         scaleY: 0.5,
 
         anchor: {x: 0.5, y: 0.5},
-        // rotation: 50,
-        // scaleX: -sprite.frameWidth,
-
-        // use the sprite sheet animations for the sprite
         animations: spriteSheet.animations
     });
 
-    let enemy = Sprite({
-        x: 0, y:0,
-        width: 10, height: 10,
-        color: 'red'
-    });
+    let text = Text({
+        text: '0',
+        font: '24px Arial',
+        color: 'red',
+        x: 2,
+        y: 2,
+        textAlign: 'center'
+      });
+
+    const obstacles = [];
+
+    const createObstacle = () => {
+        const above = (rand(0, 1000) % 2 === 0);
+        const x = STAGE_WIDTH;
+        const y = above ? 0 : rand(Y_LOAD_WIDTH, STAGE_HEIGHT/2);
+        const width = 10;
+        const height = above ? rand(STAGE_HEIGHT/2, STAGE_HEIGHT-Y_LOAD_WIDTH) : STAGE_HEIGHT - y;
+        const color = 'black';
+
+        const nextWidth = rand(X_LOAD_WIDTH, X_LOAD_WIDTH*4);
+
+        obstacles.push(Sprite({x, y, width, height, color, nextWidth}));
+    };
+
+    createObstacle();
+
+    let obstacleMoveSpeed = 1;
+    let beforeTime = 0;
 
     let loop = GameLoop({
         update: function(dt) {
             player.update();
-            enemy.update();
+            if (obstacles.length > 0) {
+                obstacles.forEach(obstacle => obstacle.update());
+            }
             if (keyPressed('left')) {
-                player.dx = -1;
+                player.dx = - MOVE_SPEED;
                 player.playAnimation("walk");
             } else if (keyPressed('right')) {
-                player.dx = 1;
+                player.dx = MOVE_SPEED;
                 player.playAnimation("walk");
             }
 
             if (keyPressed('up')) {
-                player.dy = -1;
+                player.dy = - MOVE_SPEED;
                 player.playAnimation("walk");
             } else if (keyPressed('down')) {
-                player.dy = 1;
+                player.dy = MOVE_SPEED;
                 player.playAnimation("walk");
             }
 
@@ -97,27 +142,47 @@ image.onload = function() {
                 player.playAnimation("idle");
             }
 
-            if (player.x > canvas.width) {
-                player.x = 1;
+            if (player.x >= STAGE_WIDTH) {
+                player.x = STAGE_WIDTH;
+            } else if (player.x <= 0) {
+                player.x = 0;
             }
 
-            if (player.x <= 0) {
-                player.x = canvas.width;
+            if (player.y > STAGE_HEIGHT) {
+                player.y = STAGE_HEIGHT;
+            } else if (player.y <= 0) {
+                player.y = 0;
             }
 
-            const dx = (player.x - enemy.x)|0;
-            const dy = (player.y - enemy.y)|0;
-            if (Math.abs(dx) >= Math.abs(dy)) {
-                enemy.dx = dx / Math.abs(dx) / 2;
-                enemy.dy = 0;
-            } else {
-                enemy.dy = dy / Math.abs(dy) / 2;
-                enemy.dx = 0;
+            if (obstacles.length > 0) {
+                obstacles.map(obstacle => obstacle.dx = - obstacleMoveSpeed).filter(obstacle => obstacle.x > 0);
+                if (obstacles[obstacles.length - 1].x < STAGE_WIDTH - obstacles[obstacles.length - 1].nextWidth) {
+                    createObstacle();
+                }
+            }
+
+            const now = new Date();
+            const ms = now.getTime() - startTime.getTime();
+            const s = Math.floor(ms / 1000);
+            console.log(getTime(ms));
+            // const displayTime = getTime(diff);
+
+            if (beforeTime != s) {
+                beforeTime = s;
+                // const scoreEl = document.getElementById("score");
+                // scoreEl.innerText(s);
+                // text.text = s;
+                if (s % 5 === 0) obstacleMoveSpeed += 0.2;
             }
         },
         render: function() {
             player.render();
-            enemy.render();
+
+            if (obstacles.length > 0) {
+                obstacles.forEach(obstacle => obstacle.render());
+            }
+
+            text.render();
         }
     });
 
