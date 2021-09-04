@@ -1,4 +1,5 @@
-const file = require('file-loader');
+const CopyFilePlugin = require("copy-webpack-plugin");
+const WriteFilePlugin = require("write-file-webpack-plugin");
 const TerserPlugin = require('terser-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 
@@ -28,5 +29,16 @@ module.exports = {
             template: './index.html',
             filename: 'index.html',
         }),
+        new CopyFilePlugin({
+            patterns: [
+                {
+                    context: "assets",
+                    from: "**/*.png",
+                    to: __dirname + "/dist/assets"
+                }
+            ],
+            // { copyUnmodified: true }
+        }),
+        new WriteFilePlugin()
     ],
 };
