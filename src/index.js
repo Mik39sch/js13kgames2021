@@ -1,8 +1,9 @@
 import { init, GameLoop, Sprite, bindKeys, keyPressed, initKeys, Text, unbindKeys, randInt } from 'kontra';
 import { zzfx } from 'zzfx';
 
-// const hitSound = zzfx(...[1.4,,459,,.04,.07,4,.07,-8.3,-6.7,,,,.9,,.3,.03,.67,.1,.07]); // Hit 1
-// const countupSound = zzfx(...[1.12,,588,.09,.35,.34,,.04,,-0.1,-3,.02,.16,,18,,,.69,.01,.08]); // Powerup 13
+const hitSound = () => zzfx(...[1.12,,588,.09,.35,.34,,.04,,-0.1,-3,.02,.16,,18,,,.69,.01,.08]);
+const countupSound = () => zzfx(...[,,1368,.04,.13,.14,,.36,38,,-482,.04,,.6,5.3,,,.69,.13]);
+const startSound = () => zzfx(...[,,1646,,.04,.14,1,1.16,,,-277,.05,.01,,,.1,,.99,.06]);
 
 let { canvas, context } = init();
 let stageWidth = window.innerWidth;
@@ -58,6 +59,7 @@ image.onload = function() {
     });
 
     const initialize = () => {
+        startSound();
         startTime = new Date();
         obstacleMoveSpeed = 1;
         beforeTime = 0;
@@ -169,7 +171,7 @@ image.onload = function() {
                 beforeTime = s;
                 if (s % 5 === 0) {
                     obstacleMoveSpeed += 0.2;
-                    // countupSound();
+                    countupSound();
                 };
             }
 
@@ -179,7 +181,7 @@ image.onload = function() {
                         player.x >= obstacle.x && player.x <= obstacle.x + obstacle.width &&
                         player.y >= obstacle.y && player.y <= obstacle.y + obstacle.height
                     ) {
-                        // hitSound();
+                        hitSound();
                         game.stop();
                     }
                 });
