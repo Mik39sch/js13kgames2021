@@ -33,7 +33,7 @@ module.exports = {
             patterns: [
                 {
                     context: "assets",
-                    from: "**/*.png",
+                    from: "**/*.*",
                     to: __dirname + "/dist/assets"
                 }
             ],
