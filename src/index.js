@@ -149,7 +149,9 @@ image.onload = function() {
                         player.x >= obstacle.x && player.x <= obstacle.x + obstacle.width &&
                         player.y >= obstacle.y && player.y <= obstacle.y + obstacle.height
                     ) {
-                        console.log("Game Over X");
+                        alert(`Game Over!! Your time is ${displayTime}.`);
+                        loop.stop();
+                        location.href = location.href;
                         return;
                     }
                 });

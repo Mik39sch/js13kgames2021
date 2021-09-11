@@ -19,6 +19,7 @@
   },
   "homepage": "https://github.com/Mik39sch/js13kgames2021#readme",
   "devDependencies": {
+    "@webpack-cli/serve": "^1.5.2",
     "babel-core": "^6.26.3",
     "babel-loader": "^8.2.2",
     "babel-polyfill": "^6.26.0",
