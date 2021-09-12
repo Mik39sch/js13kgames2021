@@ -1,11 +1,5 @@
 import { GameLoop, bindKeys, initKeys } from 'kontra';
-import { startTime,
-    obstacleMoveSpeed,
-    beforeTime,
-    now,
-    bestScoreText,
-    playerMoveSpeed,
-    bestScore } from './global';
+import { startTime, obstacleMoveSpeed, beforeTime, now, bestScoreText, playerMoveSpeed, bestScore } from './global';
 import { hitSound, countupSound, startSound } from './sound'
 import { getTime } from './util';
 import { background } from './bkimg';
