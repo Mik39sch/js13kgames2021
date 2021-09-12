@@ -9,9 +9,9 @@ export const items = {
         const y = randInt(15, STAGE_HEIGHT - 15);
 
         const point = randInt(1, 10);
-        const scaleX = point / 10;
-        const scaleY = point / 10;
-
+        const num = 0.05;
+        const scaleX = 0.1 + num * (10 - point);
+        const scaleY = 0.1 + num * (10 - point);
         const nextWidth = randInt(X_LOAD_WIDTH, X_LOAD_WIDTH*4);
 
         this.items.push(Sprite({
