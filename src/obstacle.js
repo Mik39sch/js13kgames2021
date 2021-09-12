@@ -3,7 +3,7 @@ import { STAGE_WIDTH, STAGE_HEIGHT, Y_LOAD_WIDTH, X_LOAD_WIDTH } from "./constan
 import { obstacleMoveSpeed } from "./global";
 
 export const obstacle = {
-    obstacles: [],
+    objs: [],
     createObstacle: function() {
         const above = (randInt(0, 1000) % 2 === 0);
         const x = STAGE_WIDTH;
@@ -12,19 +12,19 @@ export const obstacle = {
         const height = above ? randInt(STAGE_HEIGHT/2, STAGE_HEIGHT-Y_LOAD_WIDTH) : STAGE_HEIGHT - y;
         const color = 'gray';
 
-        const nextWidth = randInt(X_LOAD_WIDTH, X_LOAD_WIDTH*4);
+        const nW = randInt(X_LOAD_WIDTH, X_LOAD_WIDTH*4);
 
-        this.obstacles.push(Sprite({x, y, width, height, color, above, nextWidth}));
+        this.objs.push(Sprite({x, y, width, height, color, above, nW}));
     },
     update: function () {
-        let len = this.obstacles.length;
+        let len = this.objs.length;
         if (len > 0) {
-            this.obstacles.forEach(obstacle => obstacle.update());
-            this.obstacles.map(obstacle => obstacle.dx = - obstacleMoveSpeed).filter(obstacle => obstacle.x > 0);
-            len = this.obstacles.length;
+            this.objs.forEach(obstacle => obstacle.update());
+            this.objs.map(obstacle => obstacle.dx = - obstacleMoveSpeed).filter(obstacle => obstacle.x > 0);
+            len = this.objs.length;
         }
 
-        if (len === 0 || this.obstacles[len - 1].x < STAGE_WIDTH - this.obstacles[len - 1].nextWidth) {
+        if (len === 0 || this.objs[len - 1].x < STAGE_WIDTH - this.objs[len - 1].nW) {
             this.createObstacle();
         }
     }

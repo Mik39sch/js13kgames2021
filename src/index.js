@@ -34,7 +34,7 @@ load('player.png', 'item.png').then(function() {
         obstacleMoveSpeed = 1;
         beforeTime = 0;
         score = 0;
-        obstacle.obstacles = [];
+        obstacle.objs = [];
         items.items = [];
         now = undefined;
         if (player) {
@@ -65,19 +65,19 @@ load('player.png', 'item.png').then(function() {
                     obstacleMoveSpeed += 0.2;
                     playerMoveSpeed += 0.1;
                     countupSound();
-                }
 
-                if (s === 10) showExplain = false;
+                    if (showExplain) showExplain = false;
+                }
             }
 
             let getItem;
             items.items.forEach(item => {
-                const adjustNum = 10;
+                const scale = item.scaleX / 2;
                 if (
-                    player.x + adjustNum >= item.x - item.width * item.scaleX / 2 &&
-                    player.x - adjustNum <= item.x + item.width * item.scaleX / 2 &&
-                    player.y + adjustNum >= item.y - item.height * item.scaleY / 2 &&
-                    player.y - adjustNum <= item.y + item.height * item.scaleY / 2
+                    player.x + 10 >= item.x - item.width * scale &&
+                    player.x - 10 <= item.x + item.width * scale &&
+                    player.y + 10 >= item.y - item.height * scale &&
+                    player.y - 10 <= item.y + item.height * scale
                 ) {
                     getSound();
                     getItem = item;
@@ -90,13 +90,12 @@ load('player.png', 'item.png').then(function() {
                 items.items = items.items.filter(item => item !== getItem);
             }
 
-            obstacle.obstacles.forEach(obstacle => {
-                const adjustNum = 5;
+            obstacle.objs.forEach(obstacle => {
                 if (
-                    player.x + adjustNum >= obstacle.x &&
-                    player.x - adjustNum <= obstacle.x + obstacle.width &&
-                    player.y + adjustNum >= obstacle.y &&
-                    player.y - adjustNum <= obstacle.y + obstacle.height
+                    player.x + 5 >= obstacle.x &&
+                    player.x - 5 <= obstacle.x + obstacle.width &&
+                    player.y + 5 >= obstacle.y &&
+                    player.y - 5 <= obstacle.y + obstacle.height
                 ) {
                     hitSound();
                     game.stop();
@@ -114,7 +113,7 @@ load('player.png', 'item.png').then(function() {
             player.render();
 
             items.items.forEach(item => item.render());
-            obstacle.obstacles.forEach(obstacle => obstacle.render());
+            obstacle.objs.forEach(obstacle => obstacle.render());
 
             scoreText.render();
 

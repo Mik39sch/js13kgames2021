@@ -9,13 +9,12 @@ export const items = {
         const y = randInt(15, STAGE_HEIGHT - 15);
 
         const point = randInt(1, 10);
-        const num = 0.05;
-        const scaleX = 0.1 + num * (10 - point);
-        const scaleY = 0.1 + num * (10 - point);
-        const nextWidth = randInt(X_LOAD_WIDTH, X_LOAD_WIDTH*4);
+        const scaleX = 0.1 + 0.05 * (10 - point);
+        const scaleY = 0.1 + 0.05 * (10 - point);
+        const nW = randInt(X_LOAD_WIDTH, X_LOAD_WIDTH*4);
 
         this.items.push(Sprite({
-            x, y, scaleX, scaleY, point, nextWidth, image: this.image, anchor: {x: 0.5, y: 0.5},
+            x, y, scaleX, scaleY, point, nW, image: this.image, anchor: {x: 0.5, y: 0.5},
         }));
 
     },
@@ -27,7 +26,7 @@ export const items = {
             len = this.items.length;
         }
 
-        if (len === 0 || this.items[len - 1].x < STAGE_WIDTH - this.items[len - 1].nextWidth) {
+        if (len === 0 || this.items[len - 1].x < STAGE_WIDTH - this.items[len - 1].nW) {
             this.createItem();
         }
     }
