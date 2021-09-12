@@ -1,15 +1,24 @@
-import { bestScore, bestScoreText } from './global';
+import { bestTime, bestScore, bestTimeText, bestScoreText } from './global';
 
-const getTime = time => ('' + ((time | 0) / 1000)).replace('.', ':');
+const getTime = time => ('' + ((time | 0) / 1000));
 
-const setBestScore = score => {
+const setCookie = (time, score) => {
+    let newRecord = [false, false];
+    if (time >= bestTime) {
+        bestTime = time;
+        bestTimeText = `[Best Time] ${getTime(bestTime)}`;
+        newRecord[0] = true;
+        document.cookie = `time=${bestTime}`;
+    }
+
     if (score >= bestScore) {
         bestScore = score;
-        bestScoreText = `[BEST] ${getTime(bestScore)}`;
-        document.cookie = `score=${score}`;
-        return true;
+        bestScoreText = `[Best Score] ${bestScore}`;
+        newRecord[1] = true;
+        document.cookie = `score=${bestScore}`;
     }
-    return false;
+
+    return newRecord;
 };
 
-export { getTime, setBestScore };
+export { getTime, setCookie };

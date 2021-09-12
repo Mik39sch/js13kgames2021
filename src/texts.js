@@ -1,8 +1,8 @@
 import { Text } from "kontra";
-import { now, startTime } from "./global";
+import { now, startTime, score } from "./global";
 import { STRING_COLOR } from "./constants";
 import { background } from "./bkimg";
-import { setBestScore, getTime } from "./util";
+import { setCookie, getTime } from "./util";
 
 const baseTextObject = {
     font: '32px Arial',
@@ -11,34 +11,51 @@ const baseTextObject = {
 };
 
 export const scoreText = Text({
+    ...baseTextObject,
     text: "0.00",
-    font: '24px Arial',
+    font: '16px Arial',
     y: 5,
-    ...baseTextObject
 });
 
 export const renderClearWindow = () => {
     const ms = now.getTime() - startTime.getTime();
-    const newRecord = setBestScore(ms);
+    const newRecord = setCookie(ms, score);
 
-    let msg = newRecord ? '!!! NEW RECORD !!!\n' : 'GAME OVER!!!\n';
-    msg += `Your score is ${getTime(ms)}\n\n`;
-    msg += 'Hit [SPACE] to restart!';
-
-    const clearText = Text({
-        text: msg,
-        y: 70,
-        ...baseTextObject
+    const resultText = Text({
+        ...baseTextObject,
+        text: newRecord.some(rec => rec) ? '!!! NEW RECORD !!!\n' : 'GAME OVER!!!\n\n',
+        y: 30,
+        color: newRecord.some(rec => rec) ? 'red' : 'gold',
+    });
+    const timeText = Text({
+        ...baseTextObject,
+        text: `Time: ${getTime(ms)}`,
+        y: 60,
+        color: newRecord[0] ? 'red' : 'gold',
+    });
+    const scoreText = Text({
+        ...baseTextObject,
+        text: `Score: ${score}\n`,
+        y: 90,
+        color: newRecord[1] ? 'red' : 'gold',
+    });
+    const nextText = Text({
+        ...baseTextObject,
+        text: 'Hit [SPACE] to restart!',
+        y: 120,
     });
 
     background.render();
-    clearText.render();
+    resultText.render();
+    timeText.render();
+    scoreText.render();
+    nextText.render();
 };
 
 export const renderTitle = () => {
     const text = Text({
-        text: 'Hit [SPACE] to start!!!',
-        y: 100,
+        text: 'SPACES IN SPACE\n\nHit [SPACE] to start!!!',
+        y: 70,
         ...baseTextObject
     });
 
