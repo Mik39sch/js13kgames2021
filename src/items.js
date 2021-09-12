@@ -7,21 +7,15 @@ export const items = {
     createItem: function() {
         const x = STAGE_WIDTH;
         const y = randInt(15, STAGE_HEIGHT - 15);
-        const width = 10;
-        const height = 10;
-        const color = 'yellow';
-        const radius = randInt(1, 10);
-        const render = function() {
-            this.context.fillStyle = this.color;
-            this.context.beginPath();
-            this.context.arc(0, 0, this.radius, 0, 2  * Math.PI);
-            this.context.fill();
-        }
+
+        const point = randInt(1, 10);
+        const scaleX = point / 10;
+        const scaleY = point / 10;
 
         const nextWidth = randInt(X_LOAD_WIDTH, X_LOAD_WIDTH*4);
 
         this.items.push(Sprite({
-            x, y, width, height, color, nextWidth, radius, render
+            x, y, scaleX, scaleY, point, nextWidth, image: this.image, anchor: {x: 0.5, y: 0.5},
         }));
 
     },

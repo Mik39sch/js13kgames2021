@@ -6,9 +6,9 @@ export let player;
 export const createPlayer = image => Sprite({
     x: 100,
     y: 150,
-    scaleX: 0.5,
-    scaleY: 0.5,
-    image: image,
+    scaleX: 0.15,
+    scaleY: 0.15,
+    image,
     anchor: {x: 0.5, y: 0.5},
     update: function() {
         this.advance();
